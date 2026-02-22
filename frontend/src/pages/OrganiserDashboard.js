@@ -17,7 +17,7 @@ function OrganiserDashboard() {
   }, []);
 
   const fetchEvents = () => {
-    fetch("http://localhost:5000/api/events")
+    fetch(`${process.env.REACT_APP_API_URL}/api/users`)
       .then((res) => res.json())
       .then((data) => {
         const myEvents = data.filter(
@@ -31,7 +31,7 @@ function OrganiserDashboard() {
     e.preventDefault();
 
     const response = await fetch(
-      "http://localhost:5000/api/events/add",
+      `${process.env.REACT_APP_API_URL}/api/users`,
       {
         method: "POST",
         headers: {
@@ -62,7 +62,7 @@ function OrganiserDashboard() {
 
   const handleDelete = async (eventId) => {
     await fetch(
-      `http://localhost:5000/api/events/delete/${eventId}`,
+      `${process.env.REACT_APP_API_URL}/api/users/api/events/delete/${eventId}`,
       {
         method: "DELETE",
         headers: {
@@ -75,7 +75,7 @@ function OrganiserDashboard() {
   };
 
   const handleApprove = async (eventId, studentId) => {
-    await fetch("http://localhost:5000/api/events/approve", {
+    await fetch(`${process.env.REACT_APP_API_URL}/api/events/approve`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ function OrganiserDashboard() {
   };
 
   const handleReject = async (eventId, studentId) => {
-    await fetch("http://localhost:5000/api/events/reject", {
+    await fetch(`${process.env.REACT_APP_API_URL}/api/events/reject`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
