@@ -7,41 +7,40 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  
+    const handleLogin = async (e) => {
+  e.preventDefault();
 
-    const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/users`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      alert(data.message);
-      return;
+  const response = await fetch(
+    `${process.env.REACT_APP_API_URL}/api/auth/login`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        password
+      })
     }
+  );
 
-    // Store token and user
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+  const data = await response.json();
 
-    // 🔥 Redirect based on role from backend
-    if (data.user.role === "student") {
-      navigate("/student");
-    } else if (data.user.role === "organiser") {
-      navigate("/organiser");
-    }
-  };
+  if (!response.ok) {
+    alert(data.message);
+    return;
+  }
+
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("user", JSON.stringify(data.user));
+
+  if (data.user.role === "student") {
+    navigate("/student");
+  } else if (data.user.role === "organiser") {
+    navigate("/organiser");
+  }
+};
 
   return (
     <div className="container mt-5" style={{ maxWidth: "400px" }}>
