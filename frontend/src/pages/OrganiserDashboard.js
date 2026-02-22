@@ -16,27 +16,29 @@ function OrganiserDashboard() {
     fetchEvents();
   }, []);
 
+  /* ================= FETCH EVENTS ================= */
   const fetchEvents = () => {
-    fetch(`${process.env.REACT_APP_API_URL}/api/users`)
-      .then((res) => res.json())
-      .then((data) => {
+    fetch(`${process.env.REACT_APP_API_URL}/api/events`)
+      .then(res => res.json())
+      .then(data => {
         const myEvents = data.filter(
-          (event) => event.organiser?._id === user.id
+          event => event.organiser?._id === user.id
         );
         setEvents(myEvents);
       });
   };
 
+  /* ================= ADD EVENT ================= */
   const handleAddEvent = async (e) => {
     e.preventDefault();
 
     const response = await fetch(
-      `${process.env.REACT_APP_API_URL}/api/users`,
+      `${process.env.REACT_APP_API_URL}/api/events/add`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           title,
@@ -60,13 +62,14 @@ function OrganiserDashboard() {
     fetchEvents();
   };
 
+  /* ================= DELETE EVENT ================= */
   const handleDelete = async (eventId) => {
     await fetch(
-      `${process.env.REACT_APP_API_URL}/api/users/api/events/delete/${eventId}`,
+      `${process.env.REACT_APP_API_URL}/api/events/delete/${eventId}`,
       {
         method: "DELETE",
         headers: {
-          "Authorization": `Bearer ${token}`
+          Authorization: `Bearer ${token}`
         }
       }
     );
@@ -74,12 +77,13 @@ function OrganiserDashboard() {
     fetchEvents();
   };
 
+  /* ================= APPROVE ================= */
   const handleApprove = async (eventId, studentId) => {
     await fetch(`${process.env.REACT_APP_API_URL}/api/events/approve`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ eventId, studentId })
     });
@@ -87,12 +91,13 @@ function OrganiserDashboard() {
     fetchEvents();
   };
 
+  /* ================= REJECT ================= */
   const handleReject = async (eventId, studentId) => {
     await fetch(`${process.env.REACT_APP_API_URL}/api/events/reject`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ eventId, studentId })
     });
@@ -114,13 +119,14 @@ function OrganiserDashboard() {
   return (
     <div className="container mt-5">
 
-      {/* ADD EVENT SECTION */}
+      {/* ADD EVENT */}
       <div className="card shadow mb-5">
         <div className="card-body">
           <h4 className="mb-3">Add New Event</h4>
 
           <form onSubmit={handleAddEvent}>
             <div className="row g-3">
+
               <div className="col-md-6">
                 <input
                   type="text"
@@ -173,6 +179,7 @@ function OrganiserDashboard() {
                   required
                 />
               </div>
+
             </div>
 
             <button type="submit" className="btn btn-primary mt-3">
@@ -189,9 +196,7 @@ function OrganiserDashboard() {
         ) : (
           events.map((event) => {
             const approvedCount =
-              event.registrations?.filter(
-                (r) => r.status === "approved"
-              ).length || 0;
+              event.registrations?.filter(r => r.status === "approved").length || 0;
 
             const percentage =
               (approvedCount / event.participantLimit) * 100;
@@ -204,7 +209,6 @@ function OrganiserDashboard() {
                     <h5>{event.title}</h5>
                     <p><strong>College:</strong> {event.college}</p>
 
-                    {/* Progress Bar */}
                     <div className="progress mb-3">
                       <div
                         className="progress-bar bg-success"
@@ -256,6 +260,7 @@ function OrganiserDashboard() {
                               </button>
                             </div>
                           )}
+
                         </div>
                       ))
                     )}
@@ -267,6 +272,7 @@ function OrganiserDashboard() {
           })
         )}
       </div>
+
     </div>
   );
 }
